@@ -4,8 +4,12 @@ import Vapor
 public func routes(_ router: Router) throws {
     // Basic "It works" example
     router.get { req in
-        return "It works!"
+        //return "It works!"
+        //renders the leaf html file
+        return try req.view().render("home")
     }
+    
+    /*
     
     // Basic "Hello, world!" example
     router.get("hello") { req in
@@ -45,4 +49,10 @@ struct InfoData: Content {
 
 struct InfoResponse: Content {
   let request: InfoData
+}
+ 
+ 
+ 
+*/
+
 }
