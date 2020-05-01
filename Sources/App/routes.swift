@@ -3,10 +3,15 @@ import Vapor
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
     // Basic "It works" example
-    router.get { req in
+    router.get { req -> Future<View> in
         //return "It works!"
-        //renders the leaf html file
-        return try req.view().render("home")
+        
+        let airJordan = Shoe(id: 1, name: "Air Jordan 1", description: "One that started it all", price: 160)
+        let yeezy = Shoe(id: 2, name: "Yeezy", description: "Collab between Adidas and Kanye", price: 300)
+            
+        //leaf renders the html file and displays it.
+        //takes html from 'home.leaf' file
+        return try req.view().render("home",["shoes": [airJordan, yeezy]])
     }
     
     /*

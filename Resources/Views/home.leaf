@@ -10,6 +10,14 @@
   </style>
 </head>
 <body>
-First line of html code, using Leaf...
+
+<h1> Welcome to Amitesh's Shoe Store </h1>
+
+<ul>
+  #for(shoe in shoes) {
+    <li>#(shoe.name)</li>
+  }
+</ul>
+
 </body>
 </html>
