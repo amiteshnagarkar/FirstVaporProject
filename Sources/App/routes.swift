@@ -1,4 +1,5 @@
 import Vapor
+import Routing
 
 /// Register your application's routes here.
 public func routes(_ router: Router) throws {
@@ -6,14 +7,42 @@ public func routes(_ router: Router) throws {
     router.get { req -> Future<View> in
         //return "It works!"
         
-        let airJordan = Shoe(id: 1, name: "Air Jordan 1", description: "One that started it all", price: 160)
-        let yeezy = Shoe(id: 2, name: "Yeezy", description: "Collab between Adidas and Kanye", price: 300)
-            
-        //leaf renders the html file and displays it.
-        //takes html from 'home.leaf' file
-        return try req.view().render("home",["shoes": [airJordan, yeezy]])
+        struct PageData: Content {
+            var shoes: [Shoe]
+            var orders: [Order]
+        }
+        
+        let shoeType = Shoe.query(on: req).all()
+        let orders = Order.query(on: req).all()
+        
+        return flatMap(to: View.self, shoeType, orders) {
+            shoeType, orders in
+            let context = PageData(shoes: shoeType, orders: orders)
+            return try req.view().render("home", context)
+        }
+        
     }
     
+    router.post(Shoe.self, at: "add") { req, shoe -> Future<Response> in
+        return shoe.save(on: req).map(to: Response.self){ shoe
+            in
+            return req.redirect(to: "/")
+        }
+    }
+        
+        router.get("shoes") { req -> Future<[Shoe]> in
+            return Shoe.query(on: req).sort(\.name).all()
+    }
+        
+        router.post(Order.self, at: "order") { req, order -> Future<Order>
+            in
+            var orderCopy = order
+            orderCopy.date = Date()
+            return orderCopy.save(on: req)
+        }
+    
+}
+
     /*
     
     // Basic "Hello, world!" example
@@ -60,4 +89,3 @@ struct InfoResponse: Content {
  
 */
 
-}

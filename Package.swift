@@ -11,8 +11,6 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
         //allows HTML to be used/rendered
         .package(url: "https://github.com/vapor/leaf.git", from: "3.0.0"),
-
-
         // 🔵 Swift ORM (queries, models, relations, etc) built on SQLite 3.
         .package(url: "https://github.com/vapor/fluent-sqlite.git", from: "3.0.0")
     ],

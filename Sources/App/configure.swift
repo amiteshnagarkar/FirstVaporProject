@@ -1,3 +1,4 @@
+import Fluent
 import FluentSQLite
 import Vapor
 import Leaf
@@ -13,6 +14,21 @@ public func configure(
     
     try services.register(LeafProvider ())
     config.prefer(LeafRenderer.self, for: ViewRenderer.self)
+    
+    let directoryConfig = DirectoryConfig.detect()
+    services.register(directoryConfig)
+    
+    try services.register(FluentSQLiteProvider())
+    
+    var databaseConfig = DatabasesConfig()
+    let db = try SQLiteDatabase(storage: .file(path: "\(directoryConfig.workDir)shoes.db"))
+    databaseConfig.add(database: db, as: .sqlite)
+    services.register(databaseConfig)
+    
+    var migrationConfig = MigrationConfig()
+    migrationConfig.add(model: Shoe.self, database: .sqlite )
+    migrationConfig.add(model: Order.self, database: .sqlite )
+    services.register(migrationConfig)
     
 }
 
